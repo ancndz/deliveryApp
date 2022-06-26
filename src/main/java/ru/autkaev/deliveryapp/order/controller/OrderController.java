@@ -4,7 +4,7 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.NativeButtonRenderer;
@@ -43,7 +43,7 @@ public class OrderController extends AppLayout {
         layout.add(linkCouriers);
         layout.add(linkDeliveries);
         layout.add(grid);
-        addToNavbar(new H3("Список заказов"));
+        addToNavbar(new H2("Список заказов"));
         setContent(layout);
     }
 
