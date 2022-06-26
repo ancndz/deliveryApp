@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 import ru.autkaev.deliveryapp.delivery.domain.Delivery;
+import ru.autkaev.deliveryapp.order.OrderService;
 import ru.autkaev.deliveryapp.order.domain.ClientOrder;
 import ru.autkaev.deliveryapp.order.domain.OrderSizeEnum;
 import ru.autkaev.deliveryapp.order.domain.repo.OrderRepository;
@@ -29,17 +30,23 @@ public class DeliveryProcessHandler {
 
     private final DeliveryService deliveryService;
 
-    private final OrderRepository orderRepository;
+    private final OrderService orderService;
 
-    public DeliveryProcessHandler(final DeliveryService deliveryService, final OrderRepository orderRepository) {
+    public DeliveryProcessHandler(final DeliveryService deliveryService, final OrderService orderService) {
         this.deliveryService = deliveryService;
-        this.orderRepository = orderRepository;
+        this.orderService = orderService;
     }
 
     @TransactionalEventListener(value = OrderCreatingEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
     public void onAfterCreate(final OrderCreatingEvent event) {
         LOG.info("Start of " + DeliveryProcessHandler.class.getSimpleName());
         final ClientOrder clientOrder = event.getClientOrder();
+
+        if (clientOrder.getDelivery() != null) {
+            LOG.info("No need to process.");
+            return;
+        }
+
         final List<Delivery> acceptableDeliveries = deliveryService.findAll()
                 .stream()
                 .filter(delivery -> delivery.getAddress().equals(clientOrder.getAddress()))
@@ -80,7 +87,7 @@ public class DeliveryProcessHandler {
         delivery.getClientOrders().add(clientOrder);
 
         deliveryService.save(delivery);
-        orderRepository.save(clientOrder);
+        orderService.save(clientOrder);
     }
 
     private void createNewDelivery(final ClientOrder clientOrder) {
@@ -100,6 +107,6 @@ public class DeliveryProcessHandler {
         clientOrder.setDelivery(delivery);
 
         deliveryService.save(delivery);
-        orderRepository.save(clientOrder);
+        orderService.save(clientOrder);
     }
 }

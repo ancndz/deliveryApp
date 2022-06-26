@@ -1,6 +1,5 @@
 package ru.autkaev.deliveryapp.delivery.domain;
 
-import javax.persistence.FetchType;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.annotation.CreatedDate;
@@ -9,6 +8,8 @@ import ru.autkaev.deliveryapp.courier.domain.Courier;
 import ru.autkaev.deliveryapp.order.domain.ClientOrder;
 import ru.autkaev.deliveryapp.order.domain.OrderFragilityEnum;
 import ru.autkaev.deliveryapp.order.domain.OrderSizeEnum;
+import ru.autkaev.deliveryapp.order.domain.OrderValueEnum;
+import ru.autkaev.deliveryapp.order.domain.OrderWeightEnum;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,12 +22,11 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
-import ru.autkaev.deliveryapp.order.domain.OrderValueEnum;
-import ru.autkaev.deliveryapp.order.domain.OrderWeightEnum;
 
 /**
  * Созданная доставка.
@@ -150,12 +150,7 @@ public class Delivery {
 
     @Override
     public String toString() {
-        return "Delivery{" +
-                "id='" + id + '\'' +
-                ", address='" + address + '\'' +
-                ", courier=" + courier +
-                ", createDate=" + createDate +
-                '}';
+        return "Delivery {" + id + '}';
     }
 
     @Override
