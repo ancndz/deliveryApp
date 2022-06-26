@@ -64,14 +64,22 @@ public class DeliveryProcessHandler {
                     .filter(delivery -> delivery.getMaxOrderSize().equals(OrderSizeEnum.LARGE))
                     .sorted(Comparator.comparing(delivery -> delivery.getClientOrders().size()))
                     .findAny();
-            acceptableDelivery.ifPresent(delivery -> moveClientOrderToDelivery(clientOrder, delivery));
+            if (acceptableDelivery.isPresent()) {
+                moveClientOrderToDelivery(clientOrder, acceptableDelivery.get());
+            } else {
+                createNewDelivery(clientOrder);
+            }
         } else if (OrderSizeEnum.MEDIUM.equals(clientOrder.getOrderSizeEnum())) {
             final Optional<Delivery> acceptableDelivery = acceptableDeliveries.stream()
                     .filter(delivery -> delivery.getMaxOrderSize().equals(OrderSizeEnum.LARGE)
                             || delivery.getMaxOrderSize().equals(OrderSizeEnum.MEDIUM))
                     .sorted(Comparator.comparing(delivery -> delivery.getClientOrders().size()))
                     .findAny();
-            acceptableDelivery.ifPresent(delivery -> moveClientOrderToDelivery(clientOrder, delivery));
+            if (acceptableDelivery.isPresent()) {
+                moveClientOrderToDelivery(clientOrder, acceptableDelivery.get());
+            } else {
+                createNewDelivery(clientOrder);
+            }
         } else {
             final Optional<Delivery> acceptableDelivery = acceptableDeliveries.stream()
                     .sorted(Comparator.comparing(delivery -> delivery.getClientOrders().size()))
