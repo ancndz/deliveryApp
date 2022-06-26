@@ -84,6 +84,7 @@ public class DeliveryProcessHandler {
     private void moveClientOrderToDelivery(final ClientOrder clientOrder, final Delivery delivery) {
         LOG.info("Updating existing delivery");
         clientOrder.setDelivery(delivery);
+        clientOrder.setNew(false);
         delivery.getClientOrders().add(clientOrder);
 
         deliveryService.save(delivery);
@@ -105,6 +106,7 @@ public class DeliveryProcessHandler {
         delivery.getClientOrders().add(clientOrder);
 
         clientOrder.setDelivery(delivery);
+        clientOrder.setNew(false);
 
         deliveryService.save(delivery);
         orderService.save(clientOrder);
